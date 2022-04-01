@@ -1,0 +1,11 @@
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.pokemon {
+    background-color: #000;
+    color: #fff;
+}
+.pokemon img {
+    width: 100%;
+}
