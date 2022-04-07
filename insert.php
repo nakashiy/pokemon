@@ -12,14 +12,14 @@ foreach ($ids as $index => $id) {
 // 取得したポケモン情報を登録
 foreach ($results as $result) {
     insertPokemonInfo(
-        $result['pokemon']['id'],
-        $result['pokemon-species']['names'][0]['name'],
-        $result['pokemon']['stats'][0]['base_stat'],
-        $result['pokemon']['stats'][1]['base_stat'],
-        $result['pokemon']['stats'][2]['base_stat'],
-        $result['pokemon']['stats'][3]['base_stat'],
-        $result['pokemon']['stats'][4]['base_stat'],
-        $result['pokemon']['stats'][5]['base_stat']
+        $result['pokemon']['id'], //ポケモンID
+        $result['pokemon-species']['names'][0]['name'], //ポケモン名
+        $result['pokemon']['stats'][0]['base_stat'],    //HP
+        $result['pokemon']['stats'][1]['base_stat'],    //攻撃
+        $result['pokemon']['stats'][2]['base_stat'],    //防御
+        $result['pokemon']['stats'][3]['base_stat'],    //特殊攻撃
+        $result['pokemon']['stats'][4]['base_stat'],    //特殊防御
+        $result['pokemon']['stats'][5]['base_stat']     //素早さ
     );
 }
 

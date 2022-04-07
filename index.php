@@ -32,7 +32,7 @@
     <?php include_once './html_inc/navi.html'; ?>
     <div class="flex">
         <?php foreach ($results as $result) : ?>
-            <div class="pokemon col-4">
+            <div class="pokemon col-md-4 col-sm-6 col-xs-12">
                 <img src='<?= $result['img_url'] ?>'>
                 <div><?= $result['pokemon']['id'] ?></div>
                 <div><?= $result['pokemon-species']['names'][0]['name'] ?></div>
