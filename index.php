@@ -15,21 +15,21 @@
 
 <body>
     <?php
-    require_once './lib/function.php';
-    require_once './lib/PokemonApi.php';
-    // IDからポケモン情報取得
-    $ids[] = mt_rand(1, 898);
-    $ids[] = mt_rand(1, 898);
-    $ids[] = mt_rand(1, 898);
-    foreach ($ids as $index => $id) {
-        $PokemonApi = new PokemonApi($id);
-        $results[$index] = $PokemonApi->getInfo();
-    }
-    console($results);
+    // require_once './lib/function.php';
+    // require_once './lib/PokemonApi.php';
+    // // IDからポケモン情報取得
+    // $ids[] = mt_rand(1, 898);
+    // $ids[] = mt_rand(1, 898);
+    // $ids[] = mt_rand(1, 898);
+    // foreach ($ids as $index => $id) {
+    //     $PokemonApi = new PokemonApi($id);
+    //     $results[$index] = $PokemonApi->getInfo();
+    // }
+    // console($results);
     ?>
 
     <!-- コンテンツstart -->
-    <?php include_once './html_inc/navi.html'; ?>
+    <!-- <?php include_once './html_inc/navi.html'; ?>
     <div class="flex">
         <?php foreach ($results as $result) : ?>
             <div class="pokemon col-md-4 col-sm-6 col-xs-12">
@@ -44,8 +44,49 @@
                 <div>total:<?= $total_stat ?></div>
             </div>
         <?php endforeach; ?>
-    </div>
+    </div> -->
     <!-- コンテンツend -->
+
+    <button type="button" class="btn btn-danger" onclick="displayPokemon()">ポケモン！</button>
+    <div id="pokemon_wrap">
+        <div id="pokemon_id"></div>
+        <div id="pokemon_name"></div>
+    </div>
+
+    <script>
+        // 全て読み込まれたら実行
+        window.onload = function() {
+            // fetchPokemonInfo();
+        };
+        // ポケモンを表示
+        const displayPokemon = async () => {
+            // ポケモン情報取得
+            const No = getRandam(1, 151);
+            const pokemon_info = await fetchPokemonInfo(No);
+            console.log(pokemon_info);
+            // ポケモン情報の表示
+            const pokemon_id = document.getElementById('pokemon_id');
+            pokemon_id.innerHTML = pokemon_info['pokemon']['id'];
+            const pokemon_name = document.getElementById('pokemon_name');
+            pokemon_name.innerHTML = pokemon_info['pokemon-species']['names'][0]['name'];
+        };
+        // ポケモン情報をAPIで取得
+        const fetchPokemonInfo = async (number) => {
+            const pokemon = await fetch('https://pokeapi.co/api/v2/pokemon/' + number + '/');
+            const pokemon_json = await pokemon.json();
+            const pokemon_species = await fetch('https://pokeapi.co/api/v2/pokemon-species/' + number + '/');
+            const pokemon_species_json = await pokemon_species.json();
+            const data = {
+                'pokemon': pokemon_json,
+                'pokemon-species': pokemon_species_json
+            };
+            return data;
+        };
+        // ランダムの整数を生成
+        function getRandam(min, max) {
+            return Math.floor(Math.random() * (max + 1 - min)) + min;
+        };
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
