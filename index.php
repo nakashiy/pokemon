@@ -49,6 +49,7 @@
 
     <button type="button" class="btn btn-danger" onclick="displayPokemon()">ポケモン！</button>
     <div id="pokemon_wrap">
+        <img id="pokemon_img"></img>
         <div id="pokemon_id"></div>
         <div id="pokemon_name"></div>
     </div>
@@ -65,6 +66,8 @@
             const pokemon_info = await fetchPokemonInfo(No);
             console.log(pokemon_info);
             // ポケモン情報の表示
+            const pokemon_img = document.getElementById('pokemon_img');
+            pokemon_img.src = pokemon_info['pokemon-img'];
             const pokemon_id = document.getElementById('pokemon_id');
             pokemon_id.innerHTML = pokemon_info['pokemon']['id'];
             const pokemon_name = document.getElementById('pokemon_name');
@@ -76,9 +79,11 @@
             const pokemon_json = await pokemon.json();
             const pokemon_species = await fetch('https://pokeapi.co/api/v2/pokemon-species/' + number + '/');
             const pokemon_species_json = await pokemon_species.json();
+            const pokemon_img = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + number + '.png';
             const data = {
                 'pokemon': pokemon_json,
-                'pokemon-species': pokemon_species_json
+                'pokemon-species': pokemon_species_json,
+                'pokemon-img': pokemon_img
             };
             return data;
         };
