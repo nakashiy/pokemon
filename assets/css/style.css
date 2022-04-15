@@ -1,11 +1,16 @@
-.flex {
-    display: flex;
-    flex-wrap: wrap;
-}
-.pokemon {
+#pokemon_wrap {
     background-color: #000;
-    color: #fff;
+    width: 80%;
+    margin: 20px auto;
+    border-radius: 10px;
 }
-.pokemon img {
-    width: 100%;
+
+#img_front {
+    display: block;
+    margin: 0 auto;
+}
+
+#info {
+    color: green;
+    padding: 20px;
 }
