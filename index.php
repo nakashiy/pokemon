@@ -6,111 +6,122 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <title>PokeApi</title>
 </head>
 
-<body>
+<body class="bg-light">
     <?php
     // PHPでポケモン情報を取得
     require_once './lib/function.php';
     require_once './lib/PokemonApi.php';
-    $ids[] = mt_rand(1, 898);
+    $num = 3; //表示するポケモンの数
+    for ($i = 0; $i < $num; $i++) {
+        $ids[] = mt_rand(1, 898);
+    }
     foreach ($ids as $index => $id) {
         $PokemonApi = new PokemonApi($id);
-        $results[$index] = $PokemonApi->getInfo();
+        $pokemons[$index] = $PokemonApi->getInfo();
     }
-    // console($results);
+    console($pokemons);
     ?>
-    <!-- PHPコンテンツstart -->
-    <?php if (false) : ?>
-        <?php include_once './html_inc/navi.html'; ?>
-        <div class="flex">
-            <?php foreach ($results as $result) : ?>
-                <div class="pokemon col-md-4 col-sm-6 col-xs-12">
-                    <img src='<?= $result['img_url'] ?>'>
-                    <div><?= $result['pokemon']['id'] ?></div>
-                    <div><?= $result['pokemon-species']['names'][0]['name'] ?></div>
-                    <?php $total_stat = 0; ?>
-                    <?php for ($i = 0; $i <= 5; $i++) : ?>
-                        <div><?= $result['pokemon']['stats'][$i]['stat']['name'] . ':' . $result['pokemon']['stats'][$i]['base_stat'] ?></div>
-                        <?php $total_stat += $result['pokemon']['stats'][$i]['base_stat'] ?>
-                    <?php endfor; ?>
-                    <div>total:<?= $total_stat ?></div>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <!-- サブコンポーネント -->
+            <!-- ブランド -->
+            <a class="navbar-brand" href="./">POKEMON</a>
+            <!-- 切り替えボタン -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- ナビゲーション -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbar-content">
+                <!-- 左側メニュー：トップページの各コンテンツへのリンク -->
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="./#">ページ１<span class="visually-hidden">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./#about">ページ２</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./#items">ページ３</a>
+                    </li>
+                    <!-- ドロップダウン -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            インフォメーション
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="./#shop">お店</a>
+                            <a class="dropdown-item" href="./#access">アクセス</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- /サブコンポーネント -->
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row">
+            <?php foreach ($pokemons as $pokemon) : ?>
+                <div class="col-sm-6 col-md-4">
+                    <!-- カード -->
+                    <div class="card mb-3">
+                        <img src="<?= $pokemon['img_url'] ?>" alt="" class="img-fluid bg-dark">
+                        <!-- カードの本文 -->
+                        <div class="card-body d-flex justify-content-between">
+                            <h4 class="card-title"><?= $pokemon['pokemon-species']['names'][0]['name'] ?></h4>
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal<?= $pokemon['pokemon']['id'] ?>">
+                                詳しく見る
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- モーダル -->
+                <div class="modal fade" id="modal<?= $pokemon['pokemon']['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modal-label"><?= $pokemon['pokemon-species']['names'][0]['name'] ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center">
+                                    <img alt="ポケモンの写真" src="<?= $pokemon['img_url'] ?>" class="img-fluid">
+                                </p>
+                                <p><?= $pokemon['pokemon-species']['flavor_text_entries'][0]['flavor_text'] ?></p>
+                            </div>
+                            <div class="modal-footer">
+                                <table class="table">
+                                    <tbody>
+                                        <?php $total_stat = 0; ?>
+                                        <?php for ($i = 0; $i <= 5; $i++) : ?>
+                                            <tr>
+                                                <th><?= $pokemon['pokemon']['stats'][$i]['stat']['name'] ?></th>
+                                                <td><?= $pokemon['pokemon']['stats'][$i]['base_stat'] ?></td>
+                                            </tr>
+                                            <?php $total_stat += $pokemon['pokemon']['stats'][$i]['base_stat'] ?>
+                                        <?php endfor; ?>
+                                        <tr>
+                                            <th>total</th>
+                                            <td><?= $total_stat ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
-    <?php endif; ?>
-    <!-- PHPコンテンツend -->
-
-    <!-- JSコンテンツstart -->
-    <button type="button" class="btn btn-danger" onclick="displayPokemon()">ポケモン！</button>
-    <div id="pokemon_wrap">
-        <img id="img_front"></img>
-        <div id="info">
-            <div>　　ＩＤ：<span id="id"></span></div>
-            <div>　　名前：<span id="name"></span></div>
-            <div>　　ＨＰ：<span id="hp"></span></div>
-            <div>こうげき：<span id="attack"></span></div>
-            <div>ぼうぎょ：<span id="defense"></span></div>
-            <div>とくこう：<span id="special_attack"></span></div>
-            <div>とくぼう：<span id="special_defense"></span></div>
-            <div>すばやさ：<span id="speed"></span></div>
-            <div>　　合計：<span id="total"></span></div>
-        </div>
     </div>
-    <!-- JSコンテンツend -->
-
-    <script>
-        // ページが全て読み込まれたら実行
-        window.onload = function() {
-            displayPokemon();
-        };
-        // ポケモンを表示
-        const displayPokemon = async () => {
-            // ポケモン情報取得
-            const No = getRandam(1, 151);
-            const pokemonApi = new PokemonApi();
-            await pokemonApi.init(No);
-            console.log(pokemonApi.info);
-            //ステータスの合計算出
-            let total_stat = 0;
-            for (let i = 0; i < 6; i++) {
-                total_stat += pokemonApi.info['pokemon']['stats'][i]['base_stat'];
-            }
-            // ポケモン情報の表示
-            const img_front = document.getElementById('img_front');
-            img_front.src = pokemonApi.info['pokemon-img']['front'];
-            const id = document.getElementById('id');
-            id.innerHTML = pokemonApi.info['pokemon']['id'];
-            const name = document.getElementById('name');
-            name.innerHTML = pokemonApi.info['pokemon-species']['names'][0]['name'];
-            const hp = document.getElementById('hp');
-            hp.innerHTML = pokemonApi.info['pokemon']['stats'][0]['base_stat'];
-            const attack = document.getElementById('attack');
-            attack.innerHTML = pokemonApi.info['pokemon']['stats'][1]['base_stat'];
-            const defense = document.getElementById('defense');
-            defense.innerHTML = pokemonApi.info['pokemon']['stats'][2]['base_stat'];
-            const special_attack = document.getElementById('special_attack');
-            special_attack.innerHTML = pokemonApi.info['pokemon']['stats'][3]['base_stat'];
-            const special_defense = document.getElementById('special_defense');
-            special_defense.innerHTML = pokemonApi.info['pokemon']['stats'][4]['base_stat'];
-            const speed = document.getElementById('speed');
-            speed.innerHTML = pokemonApi.info['pokemon']['stats'][5]['base_stat'];
-            const total = document.getElementById('total');
-            total.innerHTML = total_stat;
-        };
-    </script>
-    <!-- JSライブラリ -->
-    <script type="text/javascript" src="./assets/js/function.js"></script>
-    <script type="text/javascript" src="./assets/js/PokemonApi.js"></script>
-    <!-- Bootstrapのライブラリ -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 
 </html>
