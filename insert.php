@@ -2,12 +2,18 @@
 require_once './lib/function.php';
 require_once './lib/PokemonApi.php';
 
+// 登録するNoの開始と終了
+$no_start = $_POST['start'];
+$no_end = $_POST['end'];
+
 // ポケモン情報取得
-$ids = range(1, 151);
+// APIで一度にデータ取得できるのは100件程度
+$ids = range($no_start, $no_end);
 foreach ($ids as $index => $id) {
     $PokemonApi = new PokemonApi($id);
     $results[$index] = $PokemonApi->getInfo();
 }
+console($results);
 
 // 取得したポケモン情報を登録
 foreach ($results as $result) {
