@@ -1,4 +1,7 @@
 <?php
+
+namespace pokemon\lib;
+
 // ポケモンAPIを利用するクラス
 class PokemonApi
 {

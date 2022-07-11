@@ -1,39 +1,38 @@
-<?php
-require_once './lib/function.php';
-require_once './lib/PokemonApi.php';
+<!doctype html>
+<html lang="ja">
 
-// 登録するNoの開始と終了
-$no_start = $_POST['start'];
-$no_end = $_POST['end'];
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-// ポケモン情報取得
-// APIで一度にデータ取得できるのは100件程度
-$ids = range($no_start, $no_end);
-foreach ($ids as $index => $id) {
-    $PokemonApi = new PokemonApi($id);
-    $results[$index] = $PokemonApi->getInfo();
-}
-console($results);
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-// 取得したポケモン情報を登録
-foreach ($results as $result) {
-    insertPokemonInfo(
-        $result['pokemon']['id'], //ポケモンID
-        $result['pokemon-species']['names'][0]['name'], //ポケモン名
-        $result['pokemon']['stats'][0]['base_stat'],    //HP
-        $result['pokemon']['stats'][1]['base_stat'],    //攻撃
-        $result['pokemon']['stats'][2]['base_stat'],    //防御
-        $result['pokemon']['stats'][3]['base_stat'],    //特殊攻撃
-        $result['pokemon']['stats'][4]['base_stat'],    //特殊防御
-        $result['pokemon']['stats'][5]['base_stat']     //素早さ
-    );
-}
+    <title>PokeApi</title>
+</head>
 
-// データベースにポケモン情報を登録
-function insertPokemonInfo($no, $name, $hp, $attack, $defense, $special_attack, $special_defense, $speed)
-{
-    require_once './connect.php';
-    $db = dbconnect();
-    $sql = $db->prepare('insert into pokemon set no=?,name=?,hp=?,attack=?,defense=?,special_attack=?,special_defense=?,speed=?');
-    $sql->execute([$no, $name, $hp, $attack, $defense, $special_attack, $special_defense, $speed]);
-}
+<body class="bg-light">
+    <h1 class="text-center mb-5">ポケモン登録</h1>
+    <h2 class="text-center mb-4">Noの開始と終了を入れてください</h2>
+    <div class="container">
+        <form action="./insert_processing.php" method="POST">
+            <!-- メールアドレス入力 -->
+            <div class="row">
+                <div class="mb-3 col-3">
+                    <label class="form-label" for="start">開始</label>
+                    <input class="form-control" id="start" name="start" required>
+                </div>
+                <div class="mb-3 col-3">
+                    <label class="form-label" for="end">終了</label>
+                    <input class="form-control" id="end" name="end" required>
+                </div>
+            </div>
+            <!-- 送信ボタン -->
+            <button type="submit" class="btn btn-primary">登録</button>
+        </form>
+    </div>
+</body>
+
+</html>
